@@ -1,54 +1,37 @@
 import React from 'react';
 import { createRoot } from 'react-dom';
 import { createStore } from 'redux';
-
-const initialState = {value: 0};
-
-const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case "INC":
-            return {
-                ...state,
-                value: state.value + 1
-            };
-        case "DEC":
-            return {
-                ...state,
-                value: state.value - 1
-            };
-        case "RND":
-            return {
-                ...state,
-                value: state.value * action.payload
-            };
-        default:
-            return state;
-    }
-}
+import reducer from './reducer';
+import {inc, dec,rnd } from './actions';
 
 const store = createStore(reducer);
 
+
+const {dispatch, subscribe, getState} = store;
+
 const update = () => {
-    document.getElementById('counter').textContent = store.getState().value;
+    document.getElementById('counter').textContent = getState().value;
 }
 
-store.subscribe(update);
 
-const inc = () => ({type: 'INC'});
-const dec = () => ({type: 'DEC'});
-const rnd = (value) => ({type: 'RND', payload: value});
+subscribe(update);
 
-document.getElementById('inc').addEventListener('click', () => {
-    store.dispatch(inc());
-});
+const bindActionCreator = (creator, dispatch) => (...args) => {
+    dispatch(creator(...args));
+}
 
-document.getElementById('dec').addEventListener('click', () => {
-    store.dispatch(dec());
-});
+const incDispatch = bindActionCreator(inc, dispatch);
+const decDispatch =  bindActionCreator(dec, dispatch);
+const rndDispatch =   bindActionCreator(rnd, dispatch)
+
+
+document.getElementById('inc').addEventListener('click', incDispatch);
+
+document.getElementById('dec').addEventListener('click', decDispatch);
 
 document.getElementById('rnd').addEventListener('click', () => {
     const value = Math.floor(Math.random() * 10);
-    store.dispatch(rnd(value));
+    rndDispatch((value));
 });
 
 const root = createRoot(document.getElementById('root'));
