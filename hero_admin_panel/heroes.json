@@ -17,12 +17,6 @@
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
-    },
-    {
-      "id": "a14bbae8-7350-4825-a78c-e1f1a10c92db",
-      "name": "filips Calijs",
-      "description": "fly",
-      "element": "earth"
     }
   ],
   "filters": [
