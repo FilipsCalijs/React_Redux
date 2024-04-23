@@ -8,10 +8,7 @@ import {
     heroDeleted
 } from '../actions';
 
-const initialState = {
-    heroes: [],
-    heroesLoadingStatus: 'idle'
-}
+
 
 const heroes = createReducer(initialState, {
     [heroesFetching]: state => {state.heroesLoadingStatus = 'loading'},
