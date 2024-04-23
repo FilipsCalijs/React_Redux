@@ -17,6 +17,12 @@
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
+    },
+    {
+      "id": "03376c48-e44c-415a-bdc5-83e0f916de6d",
+      "name": "цуацуа",
+      "description": "цуацу",
+      "element": "fire"
     }
   ],
   "filters": [
