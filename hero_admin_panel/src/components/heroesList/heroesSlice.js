@@ -1,60 +1,52 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import {useHttp} from '../../hooks/http.hook';
 
-const heroesAdapter = createEntityAdapter();
-// const initialState = {
-//     heroes: [],
-//     heroesLoadingStatus: 'idle'
-// }
-const initialState = heroesAdapter.getInitialState(
-    {
-        heroesLoadingStatus: 'idle'
-    }
-);
-console.log(initialState)
+const filtersAdapter = createEntityAdapter();
 
-export const fetchHeroes = createAsyncThunk(
-    'heroes/fetchHeroes',
+const initialState = filtersAdapter.getInitialState({
+    filtersLoadingStatus: 'idle',
+    activeFilter: 'all'
+});
+
+export const fetchFilters = createAsyncThunk(
+    'filters/fetchFilters',
     async () => {
         const {request} = useHttp();
-        return await request("http://localhost:3001/heroes");
+        return await request("http://localhost:3001/filters");
     }
 );
 
-const heroesSlice = createSlice({
-    name: 'heroes',
+const filtersSlice = createSlice({
+    name: 'filters',
     initialState,
     reducers: {
-        heroCreated: (state, action) => {
-            heroesAdapter.addOne(state, action.payload)
-        },
-        heroDeleted: (state, action) => {
-            heroesAdapter.removeOne(state, action.payload)
+        filtersChanged: (state, action) => {
+            state.activeFilter = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchHeroes.pending, state => {state.heroesLoadingStatus = 'loading'})
-            .addCase(fetchHeroes.fulfilled, (state, action) => {
-                state.heroesLoadingStatus = 'idle';
-                heroesAdapter.setAll(state, action.payload);
+            .addCase(fetchFilters.pending, state => {state.filtersLoadingStatus = 'loading'})
+            .addCase(fetchFilters.fulfilled, (state, action) => {
+                state.filtersLoadingStatus = 'idle';
+                filtersAdapter.setAll(state, action.payload);
             })
-            .addCase(fetchHeroes.rejected, state => {
-                state.heroesLoadingStatus = 'error';
+            .addCase(fetchFilters.rejected, state => {
+                state.filtersLoadingStatus = 'error';
             })
             .addDefaultCase(() => {})
     }
 });
 
-const {actions, reducer} = heroesSlice;
+const {actions, reducer} = filtersSlice;
 
 export default reducer;
 
-export const { selectAll } = heroesAdapter.getSelectors(state => state.heroes);
+export const {selectAll} = filtersAdapter.getSelectors(state => state.filters);
+
 export const {
-    heroesFetching,
-    heroesFetched,
-    heroesFetchingError,
-    heroCreated,
-    heroDeleted
+    filtersFetching,
+    filtersFetched,
+    filtersFetchingError,
+    filtersChanged
 } = actions;
